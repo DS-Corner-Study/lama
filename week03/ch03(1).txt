@@ -1,0 +1,242 @@
+﻿
+3장. 노드 기능 알아보기
+
+
+이번 장에서 배울 것 요약:
+
+- 노드 실습
+
+- 노드로 js 파일 실행
+
+- 노드 기본 제공 객체, 몯류 사용법
+
+- 버퍼, 스트림, 동기, 비동기, 이벤트, 예외처리 개념 배우기
+
+
+
+3.1 REPL 사용하기
+
+
+자바스크립트는 컴파일 하지 않아도 바로 코드 실행 가능 - 스크립트 언어의 특징.
+
+
+REPL
+
+: 노드의 콘솔. Read, Eval, Print, Loop 과정을 실행
+
+vscode에서 터미널을 통해 node 실행 가능
+
+
+
+image.png
+대표사진 삭제
+사진 설명을 입력하세요.
+
+
+> 모양으로 바뀐 프롬포트에서 자바스크립트 코드 입력 가능
+
+
+아래와 같은 코드를 입력해 내가 읽기, 해석하기, 그리고 출력하기 기능이 작동됨을 확인할 수 있음
+
+
+> const str = 'Hello world, hello node';
+undefined
+
+> console.log(str);
+Hello world, hello node
+undefined
+
+내용을 입력하세요.
+
+종료를 위해서 ctrl+c 를 두번 누르거나, 프롬포트 창에서 .exit 을 입력한다.
+
+
+REPL은 긴 코드를 실행하기에는 불편하다.
+
+이를 해결하기 위해서 자바스크립트 파일을 작성해 사용한다.
+
+
+
+3.2 JS 파일 실행하기
+
+
+예시를 위해서 아래와 같이 코드를 작성해보자
+
+
+function helloWorld() {
+    console.log('Hello World');
+    helloWorld();
+}
+
+function helloNode() {
+    console.log('Hello Node');
+}
+
+helloWorld();
+내용을 입력하세요.
+
+콘솔에서 작성한 파일을 노드로 실행하는 방법은 아래와 같다.
+
+
+﻿node [자바스크립트 파일 경로]
+내용을 입력하세요.
+js 확장자는 생략할 수 있다.
+
+REPL이 아닌 콘솔에서 입력해야 한다.
+
+
+
+만약 터미널에서 명령어를 입력하지 않고, 파일 자체에서 우측 상단의 화살표(run)을 누르면 어떤 결과가 나올까?
+
+
+image.png
+대표사진 삭제
+사진 설명을 입력하세요.
+
+똑같다.
+
+
+만약 helloWorld가 아니라 helloNode를 실행하면 어떨까??
+
+
+function helloWorld() {
+    console.log('Hello World');
+    helloWorld();
+}
+
+function helloNode() {
+    console.log('Hello Node');
+}
+
+helloNode();
+내용을 입력하세요.
+결과는 loop 없이 한 줄만 나온다
+
+
+﻿Hello Node
+내용을 입력하세요.
+
+
+
+3.3 모듈로 만들기
+
+
+node는 코드를 모듈로 만들 수 있어서 브라우저의 js와 다름
+
+
+모듈
+
+: 특정 기능을 하는 함수나 변수의 집합. 하나의 프로그램이면서 다른 프로그램의 부품으로 사용될 수 있음.
+
+보통 파일 1개가 모듈 1개. 파일별로 코드를 모듈화 할 수 있어서 편리.
+
+
+
+노드의 모듈
+
+형식 1 : CommonJS 모듈
+
+- js 표준 모듈X
+
+- 가장 유명한 모듈 -> 표준 나오기 이전부터 사용됨
+
+- 불러오는 모듈의 변수나 함수 명을 다르게 설정 가능
+
+- 모듈 간의 관계가 얿히면 구조 파악에 어려움
+
+- 모듈 export하는 두 가지 방법:
+
+*module.exports를 이용한 모듈 생성
+
+(module.exports 위치 자유)
+
+
+module.exports = {
+  odd, 
+  even,
+}
+내용을 입력하세요.
+
+*exports 객체를 이용한 모듈 생성 방법
+
+
+exports.odd = "~~";
+exports.even = "~~";
+내용을 입력하세요.
+* 두 가지 방법 모두 동일하게 작동 - 같은 객체를 참조하기 때문.
+
+- require : 노드를 불러오는 함수.
+
+함수는 객체이므로 이는 객체의 속성인 require.cache, require.main을 가짐
+
+require 함수의 위치 자유. 파일 최상단에 위치할 필요 없음
+
+새로 require 하는 방법으로는 require.cache의 속성을 제거하는 방법이 있지만 추천X
+
+- require.main : 노드 실행 시 첫 모듈 의미.
+
+- require.main.filename : 첫 모듈의 이름 알아보기
+
+
+- 만약 서로다른 모듈이 서로를 require한다면
+
+* 순환참조 : 서로 require한 module.exports가 함수가 아닌 빈 객체로 표시.
+
+* 에러가 아닌 경고 표시. 하지만 발생하면 안좋음.
+
+
+
+
+형식 2 : ECMAScripts 모듈
+
+- 공식적인 js 모듈 형식
+
+- 브라우저와 노드 모두 적용 가능
+
+- .mjs 확장자 사용
+
+- commonJs와 비교해 바뀐 부분은 아래와 표와 같음
+
+
+0열 선택0열 다음에 열 추가
+1열 선택1열 다음에 열 추가
+0행 선택0행 다음에 행 추가
+1행 선택1행 다음에 행 추가
+2행 선택2행 다음에 행 추가
+3행 선택3행 다음에 행 추가
+셀 전체 선택
+열 너비 조절
+행 높이 조절
+CommonJS
+
+ECMAScripts
+
+require
+
+import
+
+exports
+
+export
+
+module.exports
+
+export default
+
+셀 병합
+행 분할
+열 분할
+너비 맞춤
+삭제
+- import, export default는 함수가 아닌 문법 그 자체
+
+- 두 개의 서로다른 모듈은 서로 잘 호환하지 않으므로 한 가지만 선택해 진행하는 것을 추천
+
+
+image.png
+대표사진 삭제
+사진 설명을 입력하세요.
+
+
+
+
