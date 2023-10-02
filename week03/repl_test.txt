@@ -1,0 +1,11 @@
+# node의 터미널 REPL 사용 연습
+
+
+node < 입력으로 노드 실행이 선행되어야 함.
+
+> const str = 'Hello world, hello node';
+undefined
+
+> console.log(str);
+Hello world, hello node
+undefined
